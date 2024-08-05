@@ -1,27 +1,15 @@
 {
-    "name": "macopedia/phpstan-magento1",
-    "description": "Extension for PHPStan to allow analysis of Magento 1 code.",
+    "name": "mahocommerce/maho-phpstan-plugin",
+    "description": "Extension for PHPStan to allow analysis of Maho platform.",
     "type": "library",
     "require": {
-        "phpstan/phpstan": ">=0.12",
-        "php": ">= 7.2"
-    },
-    "replace": {
-        "inviqa/phpstan-magento1": "0.1.5",
-        "vianetz/phpstan-magento1": "0.1.5"
+        "php": ">= 8.2",
+        "phpstan/phpstan": "^1.11"
     },
     "autoload": {
         "psr-4": {
             "PHPStanMagento1\\": "src/"
         }
-    },
-    "scripts": {
-        "test-quality": [
-            "phpstan analyse"
-        ],
-        "test": [
-            "@test-quality"
-        ]
     },
     "license": "MIT"
 }
