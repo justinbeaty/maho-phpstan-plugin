@@ -14,6 +14,9 @@ if (empty($magentoRootPath)) {
 if (!defined('BP')) {
     define('BP', $magentoRootPath);
 }
+if (!defined('MAHO_IS_CHILD_PROJECT')) {
+    define('MAHO_IS_CHILD_PROJECT', false);
+}
 
 define('staticReflection', true);
 
@@ -40,20 +43,3 @@ include_once "Mage/Core/functions.php";
 (new ModuleControllerAutoloader('local'))->register();
 (new ModuleControllerAutoloader('core'))->register();
 (new ModuleControllerAutoloader('community'))->register();
-
-/**
- * Custom autoloader compatible with Varien_Autoload
- * Autoloading is needed only for the PHPStanMagento1\Config\MagentoCore which inherits from some magento classes.
- * PHPStan uses static analysis, so doesn't require autoloading.
- */
-spl_autoload_register(static function($className) {
-
-    $classFile = str_replace(' ', DIRECTORY_SEPARATOR, ucwords(str_replace('_', ' ', $className)));
-    $classFile .= '.php';
-
-    foreach (explode(':', get_include_path()) as $path) {
-        if (\file_exists($path . DIRECTORY_SEPARATOR . $classFile)) {
-            return include $classFile;
-        }
-    }
-}, true, true);
