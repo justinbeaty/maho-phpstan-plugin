@@ -14,28 +14,10 @@ if (empty($magentoRootPath)) {
 if (!defined('BP')) {
     define('BP', $magentoRootPath);
 }
+if (!defined('MAHO_IS_CHILD_PROJECT')) {
+    define('MAHO_IS_CHILD_PROJECT', false);
+}
 
 (new ModuleControllerAutoloader('local'))->register();
 (new ModuleControllerAutoloader('core'))->register();
 (new ModuleControllerAutoloader('community'))->register();
-
-/**
- * We replace the original Varien_Autoload autoloader with a custom one in order to prevent errors with invalid classes
- * that are used throughout the Magento core code.
- * The original autoloader would in this case return false and lead to an error in phpstan because the type alias in extension.neon
- * is evaluated afterwards.
- *
- * @see \Varien_Autoload::autoload()
- */
-spl_autoload_register(static function($className) {
-    spl_autoload_unregister([Varien_Autoload::instance(), 'autoload']);
-
-    $classFile = str_replace(' ', DIRECTORY_SEPARATOR, ucwords(str_replace('_', ' ', $className)));
-    $classFile .= '.php';
-
-    foreach (explode(':', get_include_path()) as $path) {
-        if (\file_exists($path . DIRECTORY_SEPARATOR . $classFile)) {
-            return include $classFile;
-        }
-    }
-}, true, true);
