@@ -1,14 +1,13 @@
 parametersSchema:
-    magentoRootPath: string()
+    mahoUseStaticReflection: bool()
+    mahoRootDir: schema(string(), nullable())
+    magentoRootPath: schema(string(), nullable())
 parameters:
-    magentoRootPath: %currentWorkingDirectory%/htdocs
-    excludePaths:
-        - */app/code/local/*/*/data/*
-        - */app/code/local/*/*/sql/*
+    mahoUseStaticReflection: true
+    mahoRootDir: null
+    magentoRootPath: null
     bootstrapFiles:
         - phpstan-bootstrap.php
-    scanFiles:
-        - %magentoRootPath%/app/Mage.php
     typeAliases:
         Mage_Catalog_Model_Entity_Product_Collection: 'Mage_Catalog_Model_Resource_Product_Collection'
         callback: 'callable'

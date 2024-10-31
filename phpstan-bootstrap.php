@@ -1,45 +1,41 @@
 <?php
+
 declare(strict_types=1);
 
-use PHPStanMagento1\Autoload\Magento\ModuleControllerAutoloader;
-
 /**
- * @var $container \PHPStan\DependencyInjection\MemoizingContainer
- */
-$magentoRootPath = $container->getParameter('magentoRootPath');
-if (empty($magentoRootPath)) {
-    throw new \Exception('Please set "magentoRootPath" in your phpstan.neon.');
+ * Read parameters from .phpstan.neon
+ *
+ * mahoUseStaticReflection: use static reflection instead of executing app/Mage.php, defaults to true
+ * mahoRootDir: path to your project's root dir, i.e. the directory containing the app folder, defaults to cwd
+ * magentoRootPath (deprecated): alias of mahoRootDir
+ *
+ * @var \PHPStan\DependencyInjection\MemoizingContainer $container
+*/
+
+define('MAHO_USE_STATIC_REFLECTION', $container->getParameter('mahoUseStaticReflection'));
+
+if (!empty($container->getParameter('mahoRootDir'))) {
+    define('MAHO_ROOT_DIR', $container->getParameter('mahoRootDir'));
+} elseif (!empty($container->getParameter('magentoRootPath'))) {
+    define('MAHO_ROOT_DIR', $container->getParameter('magentoRootPath'));
+} else {
+    define('MAHO_ROOT_DIR', getcwd());
 }
 
-if (!defined('BP')) {
-    define('BP', $magentoRootPath);
+defined('DS') || define('DS', DIRECTORY_SEPARATOR);
+defined('PS') || define('PS', PATH_SEPARATOR);
+defined('BP') || define('BP', MAHO_ROOT_DIR);
+
+if (MAHO_USE_STATIC_REFLECTION) {
+    if (file_exists(MAHO_ROOT_DIR . '/app/code/core/Mage/Core/functions.php')) {
+        require_once MAHO_ROOT_DIR . '/app/code/core/Mage/Core/functions.php';
+    } else {
+        require_once MAHO_ROOT_DIR . '/vendor/mahocommerce/maho/app/code/core/Mage/Core/functions.php';
+    }
+} else {
+    if (file_exists(MAHO_ROOT_DIR . '/app/Mage.php')) {
+        require_once MAHO_ROOT_DIR . '/app/Mage.php';
+    } else {
+        require_once MAHO_ROOT_DIR . '/vendor/mahocommerce/maho/app/Mage.php';
+    }
 }
-if (!defined('MAHO_IS_CHILD_PROJECT')) {
-    define('MAHO_IS_CHILD_PROJECT', false);
-}
-
-define('staticReflection', true);
-
-if (!defined('DS')) {
-    define('DS', DIRECTORY_SEPARATOR);
-}
-if (!defined('PS')) {
-    define('PS', PATH_SEPARATOR);
-}
-
-/**
- * Set include path
- */
-$paths = [];
-$paths[] = BP . DS . 'app' . DS . 'code' . DS . 'local';
-$paths[] = BP . DS . 'app' . DS . 'code' . DS . 'community';
-$paths[] = BP . DS . 'app' . DS . 'code' . DS . 'core';
-$paths[] = BP . DS . 'lib';
-
-$appPath = implode(PS, $paths);
-set_include_path($appPath . PS . get_include_path());
-include_once "Mage/Core/functions.php";
-
-(new ModuleControllerAutoloader('local'))->register();
-(new ModuleControllerAutoloader('core'))->register();
-(new ModuleControllerAutoloader('community'))->register();
