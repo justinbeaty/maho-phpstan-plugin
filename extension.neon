@@ -8,8 +8,6 @@ parameters:
     magentoRootPath: null
     bootstrapFiles:
         - phpstan-bootstrap.php
-    typeAliases:
-        callback: 'callable'
     earlyTerminatingMethodCalls:
         Mage:
             - throwException
