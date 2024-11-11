@@ -42,16 +42,17 @@ abstract class MethodReturnTypeDetector
     protected function getTypeFromExpr(MethodReflection $methodReflection, $methodCall, Scope $scope): Type
     {
         $argument = $methodCall->getArgs()[0] ?? null;
-        if ($argument === null  || ! $argument->value instanceof String_) {
-            return ParametersAcceptorSelector::selectFromArgs(
+        if ($argument === null || !$argument->value instanceof String_) {
+            $variant = ParametersAcceptorSelector::selectFromArgs(
                 $scope,
                 $methodCall->getArgs(),
-                $methodReflection->getVariants());
+                $methodReflection->getVariants()
+            );
+            return $variant->getReturnType();
         }
 
         $modelName = $argument->value->value;
         $modelClassName = $this->getMagentoClassName($modelName);
-
         return new ObjectType($modelClassName);
     }
 
