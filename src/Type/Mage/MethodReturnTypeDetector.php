@@ -64,7 +64,7 @@ abstract class MethodReturnTypeDetector
         }
 
         //change this to DI of staticReflection config
-        if (\defined('staticReflection')) {
+        if (\MAHO_USE_STATIC_REFLECTION) {
             $config = new MagentoCore();
             $config->loadBase();
             $config->loadModules();
