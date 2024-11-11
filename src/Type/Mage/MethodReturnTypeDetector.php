@@ -46,7 +46,7 @@ abstract class MethodReturnTypeDetector
             return ParametersAcceptorSelector::selectFromArgs(
                 $scope,
                 $methodCall->getArgs(),
-                $methodReflection->getVariants();
+                $methodReflection->getVariants());
         }
 
         $modelName = $argument->value->value;
