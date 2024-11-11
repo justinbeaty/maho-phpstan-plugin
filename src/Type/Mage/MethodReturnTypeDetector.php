@@ -43,7 +43,10 @@ abstract class MethodReturnTypeDetector
     {
         $argument = $methodCall->getArgs()[0] ?? null;
         if ($argument === null  || ! $argument->value instanceof String_) {
-            return ParametersAcceptorSelector::selectSingle($methodReflection->getVariants())->getReturnType();
+            return ParametersAcceptorSelector::selectFromArgs(
+                $scope,
+                $methodCall->getArgs(),
+                $methodReflection->getVariants();
         }
 
         $modelName = $argument->value->value;
