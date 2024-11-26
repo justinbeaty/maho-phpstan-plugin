@@ -1,47 +1,57 @@
 parametersSchema:
-    mahoUseStaticReflection: bool()
     mahoRootDir: schema(string(), nullable())
     magentoRootPath: schema(string(), nullable())
+    enforceMagicMethodDocBlock: bool()
 parameters:
-    mahoUseStaticReflection: true
     mahoRootDir: null
     magentoRootPath: null
+    enforceMagicMethodDocBlock: false
     bootstrapFiles:
-        - phpstan-bootstrap.php
+        - bootstrap.php
     earlyTerminatingMethodCalls:
         Mage:
             - throwException
+    exceptions:
+        implicitThrows: false
 
 services:
-    -
-        class: PHPStanMagento1\Reflection\Varien\Object\MagicMethodsReflectionExtension
+    mageCoreConfig:
+        class: Maho\PHPStanPlugin\Config\MageCoreConfig
+
+    mageHubClass:
+        class: Maho\PHPStanPlugin\Type\MageTypeExtension
+        tags:
+            - phpstan.broker.dynamicStaticMethodReturnTypeExtension
+        arguments:
+            mageCoreConfig: @mageCoreConfig
+            className: Mage
+
+    mageCoreBlockAbstract:
+        class: Maho\PHPStanPlugin\Type\MageTypeExtension
+        tags:
+            - phpstan.broker.dynamicMethodReturnTypeExtension
+        arguments:
+            mageCoreConfig: @mageCoreConfig
+            className: Mage_Core_Block_Abstract
+
+    mageCoreModelLayout:
+        class: Maho\PHPStanPlugin\Type\MageTypeExtension
+        tags:
+            - phpstan.broker.dynamicMethodReturnTypeExtension
+        arguments:
+            mageCoreConfig: @mageCoreConfig
+            className: Mage_Core_Model_Layout
+
+    mageInvalidTypeRule:
+        class: Maho\PHPStanPlugin\Rules\MageInvalidTypeRule
+        tags:
+            - phpstan.rules.rule
+        arguments:
+            mageCoreConfig: @mageCoreConfig
+
+    varienObjectReflection:
+        class: Maho\PHPStanPlugin\Reflection\VarienObjectReflectionExtension
         tags:
             - phpstan.broker.methodsClassReflectionExtension
-    -
-        class: PHPStanMagento1\Type\Mage\CoreModelLayout\Helper
-        tags:
-            - phpstan.broker.dynamicMethodReturnTypeExtension
-    -
-        class: PHPStanMagento1\Type\Mage\CoreBlockAbstract\Helper
-        tags:
-            - phpstan.broker.dynamicMethodReturnTypeExtension
-    -
-        class: PHPStanMagento1\Type\Mage\CoreModelLayout\GetBlockSingleton
-        tags:
-            - phpstan.broker.dynamicMethodReturnTypeExtension
-    -
-        class: PHPStanMagento1\Type\Mage\GetModel
-        tags:
-            - phpstan.broker.dynamicStaticMethodReturnTypeExtension
-    -
-        class: PHPStanMagento1\Type\Mage\GetResourceModel
-        tags:
-            - phpstan.broker.dynamicStaticMethodReturnTypeExtension
-    -
-        class: PHPStanMagento1\Type\Mage\GetSingleton
-        tags:
-            - phpstan.broker.dynamicStaticMethodReturnTypeExtension
-    -
-        class: PHPStanMagento1\Type\Mage\Helper
-        tags:
-            - phpstan.broker.dynamicStaticMethodReturnTypeExtension
+        arguments:
+            enforceDocBlock: %enforceMagicMethodDocBlock%
