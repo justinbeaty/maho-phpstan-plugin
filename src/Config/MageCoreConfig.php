@@ -35,6 +35,17 @@ final class MageCoreConfig
         case 'Mage_Core_Model_Layout::helper':
         case 'Mage_Core_Block_Abstract::helper':
             return fn ($alias) => $this->getConfig()->getHelperClassName($alias);
+        case 'Mage_Admin_Model_User::_helper':
+        case 'Mage_Adminhtml_Controller_Rss_Abstract::_helper':
+        case 'Mage_Api_Model_User::_helper':
+        case 'Mage_Customer_AccountController::_helper':
+        case 'Mage_Customer_Model_Customer::_helper':
+        case 'Mage_Rss_Controller_Abstract::_helper':
+        case 'Mage_SalesRule_Model_Validator::_helper':
+        case 'Mage_Weee_Helper_Data::_helper':
+        case 'Mage_Weee_Model_Config_Source_Fpt_Tax::_helper':
+            // Deprecated _helper calls
+            return fn ($alias) => $this->getConfig()->getHelperClassName($alias);
         }
         return null;
     }

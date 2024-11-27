@@ -32,6 +32,14 @@ services:
             mageCoreConfig: @mageCoreConfig
             className: Mage_Core_Block_Abstract
 
+    mageCoreModelAbstract:
+        class: Maho\PHPStanPlugin\Type\MageTypeExtension
+        tags:
+            - phpstan.broker.dynamicMethodReturnTypeExtension
+        arguments:
+            mageCoreConfig: @mageCoreConfig
+            className: Mage_Core_Model_Abstract
+
     mageCoreModelLayout:
         class: Maho\PHPStanPlugin\Type\MageTypeExtension
         tags:
@@ -39,6 +47,14 @@ services:
         arguments:
             mageCoreConfig: @mageCoreConfig
             className: Mage_Core_Model_Layout
+
+    mageCoreControllerVarienAction:
+        class: Maho\PHPStanPlugin\Type\MageTypeExtension
+        tags:
+            - phpstan.broker.dynamicMethodReturnTypeExtension
+        arguments:
+            mageCoreConfig: @mageCoreConfig
+            className: Mage_Core_Controller_Varien_Action
 
     mageInvalidTypeRule:
         class: Maho\PHPStanPlugin\Rules\MageInvalidTypeRule
