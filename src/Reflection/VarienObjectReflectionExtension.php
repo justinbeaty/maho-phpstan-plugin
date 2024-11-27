@@ -10,7 +10,6 @@
 namespace Maho\PHPStanPlugin\Reflection;
 
 use PHPStan\Reflection\ClassReflection;
-use PHPStan\Reflection\Dummy\DummyMethodReflection;
 use PHPStan\Reflection\MethodReflection;
 use PHPStan\Reflection\MethodsClassReflectionExtension;
 use Varien_Object;
@@ -47,6 +46,6 @@ final class VarienObjectReflectionExtension implements MethodsClassReflectionExt
 
     public function getMethod(ClassReflection $classReflection, string $methodName): MethodReflection
     {
-        return new DummyMethodReflection($methodName);
+        return new VarienObjectMagicMethodReflection($classReflection, $methodName);
     }
 }
