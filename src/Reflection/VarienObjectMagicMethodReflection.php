@@ -9,12 +9,10 @@
 
 namespace Maho\PHPStanPlugin\Reflection;
 
-use PHPStan\Analyser\OutOfClassScope;
 use PHPStan\Reflection\ClassMemberReflection;
 use PHPStan\Reflection\ClassReflection;
 use PHPStan\Reflection\FunctionVariant;
 use PHPStan\Reflection\MethodReflection;
-use PHPStan\Reflection\ParametersAcceptorSelector;
 use PHPStan\ShouldNotHappenException;
 use PHPStan\TrinaryLogic;
 use PHPStan\Type\Type;
@@ -26,16 +24,16 @@ final class VarienObjectMagicMethodReflection implements MethodReflection
     {
         switch (substr($methodName, 0, 3)) {
         case 'get':
-            $this->methodReflection = $classReflection->getMethod('getData', new OutOfClassScope());
+            $this->methodReflection = $classReflection->getNativeMethod('getData');
             break;
         case 'set':
-            $this->methodReflection = $classReflection->getMethod('setData', new OutOfClassScope());
+            $this->methodReflection = $classReflection->getNativeMethod('setData');
             break;
         case 'uns':
-            $this->methodReflection = $classReflection->getMethod('unsetData', new OutOfClassScope());
+            $this->methodReflection = $classReflection->getNativeMethod('unsetData');
             break;
         case 'has':
-            $this->methodReflection = $classReflection->getMethod('hasData', new OutOfClassScope());
+            $this->methodReflection = $classReflection->getNativeMethod('hasData');
             break;
         default:
             throw new ShouldNotHappenException();
