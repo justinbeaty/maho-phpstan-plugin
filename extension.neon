@@ -11,8 +11,6 @@ parameters:
     earlyTerminatingMethodCalls:
         Mage:
             - throwException
-    exceptions:
-        implicitThrows: false
 
 services:
     mageCoreConfig:

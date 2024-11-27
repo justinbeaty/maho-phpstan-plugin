@@ -18,7 +18,6 @@ use PHPStan\Reflection\Dummy\DummyMethodReflection;
 
 use PHPStan\Reflection\MethodsClassReflectionExtension;
 
-
 final class VarienObjectReflectionExtension implements MethodsClassReflectionExtension
 {
     public function __construct(private bool $enforceDocBlock)
@@ -28,16 +27,20 @@ final class VarienObjectReflectionExtension implements MethodsClassReflectionExt
     public function hasMethod(ClassReflection $classReflection, string $methodName): bool
     {
         if (!\in_array(\substr($methodName, 0, 3), ['get', 'set', 'uns', 'has'])) {
-            echo "A\n";
             return false;
         }
         if (!$classReflection->is(\Varien_Object::class)) {
             return false;
         }
 
+        $phpDocTags = $classReflection->getResolvedPhpDoc()->getMethodTags();
+
+        if (isset($phpDocTags[$methodName])) {
+            return false;
+        }
+
         if ($classReflection->isSubclassOf(\Varien_Object::class) && $this->enforceDocBlock) {
-            $phpDocTags = $classReflection->getResolvedPhpDoc()->getMethodTags();
-            return isset($phpDocTags[$methodName]);
+            return false;
         }
 
         return true;
