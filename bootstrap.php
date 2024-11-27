@@ -1,14 +1,11 @@
-<?php
+<?php declare(strict_types=1);
+
 /**
- * Maho
- *
  * @category   Maho
  * @package    PHPStanPlugin
- * @copyright  Copyright © Maho (https://mahocommerce.com)
- * @license    https://opensource.org/license/mit The MIT License
+ * @copyright  Maho Contributors https://mahocommerce.com
+ * @license    https://opensource.org/license/mit
  */
-
-declare(strict_types=1);
 
 /** @var \PHPStan\DependencyInjection\MemoizingContainer $container */
 if (!empty($container->getParameter('mahoRootDir'))) {

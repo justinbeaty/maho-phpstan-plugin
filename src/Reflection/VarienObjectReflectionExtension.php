@@ -1,22 +1,21 @@
-<?php
+<?php declare(strict_types=1);
+
 /**
- * Maho
- *
  * @category   Maho
  * @package    PHPStanPlugin
- * @copyright  Copyright © Maho (https://mahocommerce.com)
- * @license    https://opensource.org/license/mit The MIT License
+ * @copyright  Maho Contributors https://mahocommerce.com
+ * @license    https://opensource.org/license/mit
  */
-
-declare(strict_types=1);
 
 namespace Maho\PHPStanPlugin\Reflection;
 
 use PHPStan\Reflection\ClassReflection;
-use PHPStan\Reflection\MethodReflection;
 use PHPStan\Reflection\Dummy\DummyMethodReflection;
-
+use PHPStan\Reflection\MethodReflection;
 use PHPStan\Reflection\MethodsClassReflectionExtension;
+use Varien_Object;
+use function in_array;
+use function substr;
 
 final class VarienObjectReflectionExtension implements MethodsClassReflectionExtension
 {
@@ -26,10 +25,10 @@ final class VarienObjectReflectionExtension implements MethodsClassReflectionExt
 
     public function hasMethod(ClassReflection $classReflection, string $methodName): bool
     {
-        if (!\in_array(\substr($methodName, 0, 3), ['get', 'set', 'uns', 'has'])) {
+        if (!in_array(substr($methodName, 0, 3), ['get', 'set', 'uns', 'has'])) {
             return false;
         }
-        if (!$classReflection->is(\Varien_Object::class)) {
+        if (!$classReflection->is(Varien_Object::class)) {
             return false;
         }
 
@@ -39,7 +38,7 @@ final class VarienObjectReflectionExtension implements MethodsClassReflectionExt
             return false;
         }
 
-        if ($classReflection->isSubclassOf(\Varien_Object::class) && $this->enforceDocBlock) {
+        if ($classReflection->isSubclassOf(Varien_Object::class) && $this->enforceDocBlock) {
             return false;
         }
 

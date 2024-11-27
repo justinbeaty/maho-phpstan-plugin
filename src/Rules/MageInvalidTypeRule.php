@@ -1,55 +1,53 @@
-<?php
+<?php declare(strict_types=1);
+
 /**
- * Maho
- *
  * @category   Maho
  * @package    PHPStanPlugin
- * @copyright  Copyright © Maho (https://mahocommerce.com)
- * @license    https://opensource.org/license/mit The MIT License
+ * @copyright  Maho Contributors https://mahocommerce.com
+ * @license    https://opensource.org/license/mit
  */
-
-declare(strict_types=1);
 
 namespace Maho\PHPStanPlugin\Rules;
 
 use Maho\PHPStanPlugin\Config\MageCoreConfig;
-
 use PhpParser\Node;
-use PhpParser\Node\Name;
-use PhpParser\Node\Identifier;
-use PhpParser\Node\Expr\CallLike;
-use PhpParser\Node\Expr\MethodCall;
-use PhpParser\Node\Expr\StaticCall;
 use PHPStan\Analyser\Scope;
-
+use PHPStan\Node\Printer\ExprPrinter;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
-
-use PHPStan\Node\Printer\ExprPrinter;
+use function class_exists;
+use function count;
+use function implode;
+use function is_callable;
+use function ltrim;
+use function sprintf;
 
 final class MageInvalidTypeRule implements Rule
 {
-    public function __construct(private ExprPrinter $exprPrinter, private MageCoreConfig $mageCoreConfig)
+    public function __construct(
+        private ExprPrinter $exprPrinter,
+        private MageCoreConfig $mageCoreConfig,
+    )
     {
     }
 
     public function getNodeType(): string
     {
-        return CallLike::class;
+        return Node\Expr\CallLike::class;
     }
 
     public function processNode(Node $methodCall, Scope $scope): array
     {
-        if (!$methodCall instanceof MethodCall && !$methodCall instanceof StaticCall) {
+        if (!$methodCall->name instanceof Node\Identifier) {
             return [];
         }
-        if (!$methodCall->name instanceof Identifier) {
+        if (count($methodCall->getArgs()) === 0) {
             return [];
         }
 
-        if ($methodCall instanceof MethodCall) {
+        if ($methodCall instanceof Node\Expr\MethodCall) {
             $calledOnType = $scope->getType($methodCall->var);
-        } elseif ($methodCall instanceof StaticCall) {
+        } elseif ($methodCall instanceof Node\Expr\StaticCall) {
             if ($methodCall->class instanceof Node\Name) {
                 $calledOnType = $scope->resolveTypeByName($methodCall->class);
             } else {
@@ -70,12 +68,7 @@ final class MageInvalidTypeRule implements Rule
             $methodReflection->getName()
         );
 
-        if (!\is_callable($fn)) {
-            return [];
-        }
-
-        // arguments.count
-        if (\count($methodCall->getArgs()) === 0) {
+        if (!is_callable($fn)) {
             return [];
         }
 
@@ -89,20 +82,20 @@ final class MageInvalidTypeRule implements Rule
 
             if ($className === false) {
                 $invalidTypes[] = 'bool(false)';
-            } elseif (\class_exists($className) === false) {
+            } elseif (class_exists($className) === false) {
                 $invalidTypes[] = $className;
             }
         }
 
-        if (\count($invalidTypes) === 0) {
+        if (count($invalidTypes) === 0) {
             return [];
         }
 
         return [
-            RuleErrorBuilder::message(\sprintf(
+            RuleErrorBuilder::message(sprintf(
                 'Call to %s resulted in invalid type %s.',
-                \ltrim($this->exprPrinter->printExpr($methodCall), '\\'),
-                \implode('|', $invalidTypes),
+                ltrim($this->exprPrinter->printExpr($methodCall), '\\'),
+                implode('|', $invalidTypes),
             ))->identifier('mage.invalidType')->build()
         ];
     }

@@ -1,30 +1,27 @@
-<?php
+<?php declare(strict_types=1);
+
 /**
- * Maho
- *
  * @category   Maho
  * @package    PHPStanPlugin
- * @copyright  Copyright © Maho (https://mahocommerce.com)
- * @license    https://opensource.org/license/mit The MIT License
+ * @copyright  Maho Contributors https://mahocommerce.com
+ * @license    https://opensource.org/license/mit
  */
-
-declare(strict_types=1);
 
 namespace Maho\PHPStanPlugin\Type;
 
 use Maho\PHPStanPlugin\Config\MageCoreConfig;
-
 use PhpParser\Node\Expr\CallLike;
-use PHPStan\Reflection\MethodReflection;
 use PHPStan\Analyser\Scope;
-
-use PHPStan\Type\Type;
-use PHPStan\Type\TypeCombinator;
+use PHPStan\Reflection\MethodReflection;
 use PHPStan\Type\Constant\ConstantBooleanType;
-use PHPStan\Type\ObjectType;
-
 use PHPStan\Type\DynamicMethodReturnTypeExtension;
 use PHPStan\Type\DynamicStaticMethodReturnTypeExtension;
+use PHPStan\Type\ObjectType;
+use PHPStan\Type\Type;
+use PHPStan\Type\TypeCombinator;
+use function class_exists;
+use function count;
+use function is_callable;
 
 final class MageTypeExtension implements DynamicMethodReturnTypeExtension, DynamicStaticMethodReturnTypeExtension
 {
@@ -44,12 +41,12 @@ final class MageTypeExtension implements DynamicMethodReturnTypeExtension, Dynam
             $methodReflection->getName()
         );
 
-        return \is_callable($fn);
+        return is_callable($fn);
     }
 
     public function getTypeFromMethodCall(MethodReflection $methodReflection, CallLike $methodCall, Scope $scope): ?Type
     {
-        if (\count($methodCall->getArgs()) === 0) {
+        if (count($methodCall->getArgs()) === 0) {
             return null; // do i return error type?
         }
 
@@ -66,14 +63,14 @@ final class MageTypeExtension implements DynamicMethodReturnTypeExtension, Dynam
 
             $className = $fn($alias->getValue());
 
-            if ($className === false || \class_exists($className) === false) {
+            if ($className === false || class_exists($className) === false) {
                 $returnTypes[] = new ConstantBooleanType(false);
             } else {
                 $returnTypes[] = new ObjectType($className);
             }
         }
 
-        if (\count($returnTypes) === 0) {
+        if (count($returnTypes) === 0) {
             $returnTypes[] = $methodReflection->getOnlyVariant()->getReturnType();
         }
 

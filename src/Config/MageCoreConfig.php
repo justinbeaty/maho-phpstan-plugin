@@ -1,25 +1,26 @@
-<?php
+<?php declare(strict_types=1);
+
 /**
- * Maho
- *
  * @category   Maho
  * @package    PHPStanPlugin
- * @copyright  Copyright © Maho (https://mahocommerce.com)
- * @license    https://opensource.org/license/mit The MIT License
+ * @copyright  Maho Contributors https://mahocommerce.com
+ * @license    https://opensource.org/license/mit
  */
-
-declare(strict_types=1);
 
 namespace Maho\PHPStanPlugin\Config;
 
+use Closure;
+use Mage;
+use Mage_Core_Model_Config;
+
 final class MageCoreConfig
 {
-    public function getConfig(): \Mage_Core_Model_Config
+    public function getConfig(): Mage_Core_Model_Config
     {
-        return \Mage::app()->getConfig();
+        return Mage::app()->getConfig();
     }
 
-    public function getConfigMethodClosure(string $class, string $method): ?\Closure
+    public function getConfigMethodClosure(string $class, string $method): ?Closure
     {
         switch ("$class::$method") {
         case 'Mage::getModel':
