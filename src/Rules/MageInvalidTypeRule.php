@@ -63,7 +63,7 @@ final class MageInvalidTypeRule implements Rule
             return [];
         }
 
-        $fn = $this->mageCoreConfig->getConfigMethodClosure(
+        $fn = $this->mageCoreConfig->getClassNameConverterFunction(
             $methodReflection->getDeclaringClass()->getName(),
             $methodReflection->getName()
         );

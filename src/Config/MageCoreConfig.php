@@ -9,7 +9,6 @@
 
 namespace Maho\PHPStanPlugin\Config;
 
-use Closure;
 use Mage;
 use Mage_Core_Model_Config;
 
@@ -20,7 +19,7 @@ final class MageCoreConfig
         return Mage::app()->getConfig();
     }
 
-    public function getConfigMethodClosure(string $class, string $method): ?Closure
+    public function getClassNameConverterFunction(string $class, string $method): ?callable
     {
         switch ("$class::$method") {
         case 'Mage::getModel':
@@ -29,6 +28,7 @@ final class MageCoreConfig
         case 'Mage::getResourceModel':
         case 'Mage::getResourceSingleton':
             return fn ($alias) => $this->getConfig()->getResourceModelClassName($alias);
+        case 'Mage_Core_Model_Layout::createBlock':
         case 'Mage_Core_Model_Layout::getBlockSingleton':
             return fn ($alias) => $this->getConfig()->getBlockClassName($alias);
         case 'Mage::helper':

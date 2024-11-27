@@ -36,7 +36,7 @@ final class MageTypeExtension implements DynamicMethodReturnTypeExtension, Dynam
 
     public function isMethodSupported(MethodReflection $methodReflection): bool
     {
-        $fn = $this->mageCoreConfig->getConfigMethodClosure(
+        $fn = $this->mageCoreConfig->getClassNameConverterFunction(
             $methodReflection->getDeclaringClass()->getName(),
             $methodReflection->getName()
         );
@@ -50,7 +50,7 @@ final class MageTypeExtension implements DynamicMethodReturnTypeExtension, Dynam
             return null; // do i return error type?
         }
 
-        $fn = $this->mageCoreConfig->getConfigMethodClosure(
+        $fn = $this->mageCoreConfig->getClassNameConverterFunction(
             $methodReflection->getDeclaringClass()->getName(),
             $methodReflection->getName()
         );
