@@ -15,10 +15,11 @@ namespace Maho\PHPStanPlugin\Rules;
 use Maho\PHPStanPlugin\Config\MageCoreConfig;
 
 use PhpParser\Node;
+use PhpParser\Node\Name;
+use PhpParser\Node\Identifier;
 use PhpParser\Node\Expr\CallLike;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Expr\StaticCall;
-use PhpParser\Node\Expr\Identifier;
 use PHPStan\Analyser\Scope;
 
 use PHPStan\Rules\Rule;
@@ -46,9 +47,17 @@ final class MageInvalidTypeRule implements Rule
             return [];
         }
 
-        $calledOnType = isset($methodCall->var)
-            ? $scope->getType($methodCall->var)
-            : $scope->resolveTypeByName($methodCall->class);
+        if ($methodCall instanceof MethodCall) {
+            $calledOnType = $scope->getType($methodCall->var);
+        } elseif ($methodCall instanceof StaticCall) {
+            if ($methodCall->class instanceof Node\Name) {
+                $calledOnType = $scope->resolveTypeByName($methodCall->class);
+            } else {
+                $calledOnType = $scope->getType($methodCall->class);
+            }
+        } else {
+            return [];
+        }
 
         $methodReflection = $scope->getMethodReflection($calledOnType, $methodCall->name->toString());
 
@@ -89,21 +98,12 @@ final class MageInvalidTypeRule implements Rule
             return [];
         }
 
-        $invalidExpr = \ltrim($this->exprPrinter->printExpr($methodCall), '\\');
-        $message = \sprintf('Call to %s resulted in invalid type %s.', $invalidExpr, \implode('|', $invalidTypes));
-
         return [
-            RuleErrorBuilder::message($message)->build()
-        ];
-
-        //return $this->buildMessage('Call to %s resulted in invalid type %s.', $invalidExpr, \implode('|', $invalidTypes));
-    }
-
-    protected function buildMessage(string $format, mixed ...$values): array
-    {
-        return [
-            RuleErrorBuilder::message(\sprintf($format, ...$values))->build()
+            RuleErrorBuilder::message(\sprintf(
+                'Call to %s resulted in invalid type %s.',
+                \ltrim($this->exprPrinter->printExpr($methodCall), '\\'),
+                \implode('|', $invalidTypes),
+            ))->identifier('mage.invalidType')->build()
         ];
     }
-
 }
