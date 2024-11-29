@@ -1,0 +1,87 @@
+<?php declare(strict_types=1);
+
+/**
+ * Main Mage hub class
+ */
+final class Mage
+{
+    /**
+     * Get initialized application object.
+     *
+     * @param string $code
+     * @param string $type
+     * @param string|array $options
+     * @return Mage_Core_Model_App
+     */
+    public static function app($code = '', $type = 'store', $options = [])
+    {
+    }
+}
+
+/**
+ * Application model
+ */
+class Mage_Core_Model_App
+{
+    /**
+     * Retrieve configuration object
+     *
+     * @return Mage_Core_Model_Config
+     */
+    public function getConfig()
+    {
+    }
+}
+
+/**
+ * Core configuration class
+ */
+class Mage_Core_Model_Config
+{
+    /**
+     * Retrieve module class name
+     *
+     * @param   string $modelClass
+     * @return  string
+     */
+    public function getModelClassName($modelClass)
+    {
+    }
+
+    /**
+     * Get a resource model class name
+     *
+     * @param string $modelClass
+     * @return string|false
+     */
+    public function getResourceModelClassName($modelClass)
+    {
+    }
+
+    /**
+     * Retrieve block class name
+     *
+     * @param   string $blockType
+     * @return  string
+     */
+    public function getBlockClassName($blockType)
+    {
+    }
+
+    /**
+     * Retrieve helper class name
+     *
+     * @param   string $helperName
+     * @return  string
+     */
+    public function getHelperClassName($helperName)
+    {
+    }
+}
+
+/**
+ * Varien Object
+ */
+class Varien_Object implements ArrayAccess, JsonSerializable
+{
+}

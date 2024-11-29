@@ -1,15 +1,25 @@
 {
     "name": "mahocommerce/maho-phpstan-plugin",
-    "description": "Extension for PHPStan to allow analysis of Maho platform.",
-    "type": "library",
+    "description": "Extension for PHPStan to allow static analysis of Maho projects.",
+    "type": "phpstan-extension",
+    "license": "MIT",
     "require": {
-        "php": ">= 8.2",
-        "phpstan/phpstan": "^2.0"
+        "php": ">= 8.2"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^2.0",
+        "phpstan/phpstan-strict-rules": "^2.0"
     },
     "autoload": {
         "psr-4": {
-            "PHPStanMagento1\\": "src/"
+            "Maho\\PHPStanPlugin\\": "src/"
         }
     },
-    "license": "MIT"
+    "extra": {
+        "phpstan": {
+            "includes": [
+                "extension.neon"
+            ]
+        }
+    }
 }
