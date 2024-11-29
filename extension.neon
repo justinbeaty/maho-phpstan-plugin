@@ -1,13 +1,17 @@
 parametersSchema:
     magentoRootPath: schema(string(), nullable())
     enforceMagicMethodDocBlock: bool()
+    useLocalXml: bool()
 parameters:
     magentoRootPath: null # Deprecated
     enforceMagicMethodDocBlock: false
+    useLocalXml: false
 
 services:
     mageCoreConfig:
         class: Maho\PHPStanPlugin\Config\MageCoreConfig
+        arguments:
+            useLocalXml: %useLocalXml%
 
     ## Dynamic Return Type Extension to return correct class from Mage::getModel() etc
     -

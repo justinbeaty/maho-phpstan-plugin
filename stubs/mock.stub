@@ -16,6 +16,17 @@ final class Mage
     public static function app($code = '', $type = 'store', $options = [])
     {
     }
+
+    /**
+     * @static
+     * @param string $code
+     * @param string $type
+     * @param array $options
+     * @param string|array $modules
+     */
+    public static function init($code = '', $type = 'store', $options = [], $modules = [])
+    {
+    }
 }
 
 /**
