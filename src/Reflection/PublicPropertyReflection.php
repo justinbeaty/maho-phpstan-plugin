@@ -9,11 +9,8 @@ use PHPStan\Type\Type;
 
 final class PublicPropertyReflection implements PropertyReflection
 {
-    private PropertyReflection $originalProperty;
-
-    public function __construct(PropertyReflection $originalProperty)
+    public function __construct(private PropertyReflection $originalProperty)
     {
-        $this->originalProperty = $originalProperty;
     }
 
     public function getDeclaringClass(): ClassReflection

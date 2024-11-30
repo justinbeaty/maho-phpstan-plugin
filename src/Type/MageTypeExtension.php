@@ -19,17 +19,11 @@ use function is_callable;
 
 final class MageTypeExtension implements DynamicMethodReturnTypeExtension, DynamicStaticMethodReturnTypeExtension
 {
-    /** @var class-string */
-    private string $className;
-    private MageCoreConfig $mageCoreConfig;
-
     /**
      * @param class-string $className
      */
-    public function __construct(string $className, MageCoreConfig $mageCoreConfig)
+    public function __construct(private string $className, private MageCoreConfig $mageCoreConfig)
     {
-        $this->className = $className;
-        $this->mageCoreConfig = $mageCoreConfig;
     }
 
     /**

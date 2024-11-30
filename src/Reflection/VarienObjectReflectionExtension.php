@@ -12,11 +12,8 @@ use function substr;
 
 final class VarienObjectReflectionExtension implements MethodsClassReflectionExtension
 {
-    private bool $enforceDocBlock;
-
-    public function __construct(bool $enforceDocBlock)
+    public function __construct(private bool $enforceDocBlock)
     {
-        $this->enforceDocBlock = $enforceDocBlock;
     }
 
     public function hasMethod(ClassReflection $classReflection, string $methodName): bool

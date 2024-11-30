@@ -13,11 +13,8 @@ use function array_slice;
 
 final class MagicMethodReflection implements MethodReflection
 {
-    private MethodReflection $originalMethod;
-
-    public function __construct(MethodReflection $originalMethod)
+    public function __construct(private MethodReflection $originalMethod)
     {
-        $this->originalMethod = $originalMethod;
     }
 
     public function getDeclaringClass(): ClassReflection

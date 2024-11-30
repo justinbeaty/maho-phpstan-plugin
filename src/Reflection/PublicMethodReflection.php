@@ -12,11 +12,8 @@ use PHPStan\Type\Type;
 
 final class PublicMethodReflection implements MethodReflection
 {
-    private MethodReflection $originalMethod;
-
-    public function __construct(MethodReflection $originalMethod)
+    public function __construct(private MethodReflection $originalMethod)
     {
-        $this->originalMethod = $originalMethod;
     }
 
     public function getDeclaringClass(): ClassReflection

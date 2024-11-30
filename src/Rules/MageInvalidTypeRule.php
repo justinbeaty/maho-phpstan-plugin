@@ -20,13 +20,8 @@ use function sprintf;
  */
 final class MageInvalidTypeRule implements Rule
 {
-    private ExprPrinter $exprPrinter;
-    private MageCoreConfig $mageCoreConfig;
-
-    public function __construct(ExprPrinter $exprPrinter, MageCoreConfig $mageCoreConfig)
+    public function __construct(private ExprPrinter $exprPrinter, private MageCoreConfig $mageCoreConfig)
     {
-        $this->exprPrinter = $exprPrinter;
-        $this->mageCoreConfig = $mageCoreConfig;
     }
 
     public function getNodeType(): string
