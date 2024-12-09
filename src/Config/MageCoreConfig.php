@@ -7,15 +7,20 @@ use Mage_Core_Model_Config;
 
 final class MageCoreConfig
 {
+    private bool $useLocalXml;
+    private bool $hasInitialized = false;
+
     public function __construct(bool $useLocalXml)
     {
-        if ($useLocalXml === false) {
-            Mage::init('', 'store', ['is_installed' => false]);
-        }
+        $this->useLocalXml = $useLocalXml;
     }
 
     public function getConfig(): Mage_Core_Model_Config
     {
+        if ($this->hasInitialized === false && $this->useLocalXml === false) {
+            $this->hasInitialized = true;
+            Mage::init('', 'store', ['is_installed' => false]);
+        }
         return Mage::app()->getConfig();
     }
 
