@@ -50,30 +50,17 @@ class Mage_Core_Model_App
 class Mage_Core_Model_Config
 {
     /**
-     * Retrieve module class name
-     *
-     * @param   string $modelClass
-     * @return  string
+     * Retrieve class name from config.xml node
      */
-    public function getModelClassName($modelClass)
-    {
-    }
-
-    /**
-     * Get a resource model class name
-     *
-     * @param string $modelClass
-     * @return string|false
-     */
-    public function getResourceModelClassName($modelClass)
+    public function getNodeClassName(string $path): string
     {
     }
 
     /**
      * Retrieve block class name
      *
-     * @param   string $blockType
-     * @return  string
+     * @param string $blockType
+     * @return string
      */
     public function getBlockClassName($blockType)
     {
@@ -82,10 +69,37 @@ class Mage_Core_Model_Config
     /**
      * Retrieve helper class name
      *
-     * @param   string $helperName
-     * @return  string
+     * @param string $helperAlias
+     * @return string
      */
-    public function getHelperClassName($helperName)
+    public function getHelperClassName($helperAlias)
+    {
+    }
+
+    /**
+     * Retrieve model class name
+     *
+     * @param string $modelAlias
+     * @return string
+     */
+    public function getModelClassName($modelAlias)
+    {
+    }
+
+    /**
+     * Retrieve resource model class name
+     *
+     * @param string $modelAlias
+     * @return string|false
+     */
+    public function getResourceModelClassName($modelAlias)
+    {
+    }
+
+    /**
+     * Retrieve resource helper class name
+     */
+    public function getResourceHelperClassName(string $moduleAlias): string|false
     {
     }
 }
